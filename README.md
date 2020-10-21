@@ -1,3 +1,5 @@
+# Symfony Bundle API Throttler
+
 ## Test
 
 `phpunit` OU `vendor/bin/phpunit`

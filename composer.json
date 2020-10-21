@@ -19,8 +19,9 @@
   "config" : {
     "sort-packages" : true
   },
-  "description" : "API Throttler Symfony bundle",
+  "description" : "API Throttler Symfony bundle helps you throttle API calls using a persistent token bucket algorithm",
   "license" : "proprietary",
+  "minimum-stability": "dev",
   "name" : "jalismrs/symfony-api-throttler.bundle",
   "require-dev" : {
     "composer/package-versions-deprecated" : "*",

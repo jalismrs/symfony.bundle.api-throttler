@@ -1,0 +1,45 @@
+{
+  "authors" : [
+    {
+      "name" : "Kévin CASTEJON",
+      "email" : "kevin.castejon@jalis.fr",
+      "role" : "Developer"
+    }
+  ],
+  "autoload" : {
+    "psr-4" : {
+      "Jalismrs\\ApiThrottlerBundle\\" : "src"
+    }
+  },
+  "autoload-dev" : {
+    "psr-4" : {
+      "Tests\\" : "tests"
+    }
+  },
+  "config" : {
+    "sort-packages" : true
+  },
+  "description" : "API Throttler Symfony bundle",
+  "license" : "proprietary",
+  "name" : "jalismrs/symfony-api-throttler.bundle",
+  "require-dev" : {
+    "composer/package-versions-deprecated" : "*",
+    "mikey179/vfsstream" : "*",
+    "phpunit/phpunit" : "^9.2.6",
+    "roave/security-advisories" : "dev-master"
+  },
+  "require" : {
+    "php" : "^7.4.8",
+    "maba/gentle-force" : "^0.3.0",
+    "symfony/http-kernel" : "^5.1.7",
+    "symfony/dependency-injection": "^4.3.3"
+  },
+  "support" : {
+    "email" : "dev@jalis.fr",
+    "issues" : "https://github.com/jalismrs/symfony-api-throttler.bundle/issues",
+    "wiki" : "https://github.com/jalismrs/symfony-api-throttler.bundle/wiki",
+    "source" : "https://github.com/jalismrs/symfony-api-throttler.bundle",
+    "docs" : "https://github.com/jalismrs/symfony-api-throttler.bundle"
+  },
+  "type" : "symfony-bundle"
+}

@@ -1,0 +1,18 @@
+services:
+    # maba/gentle-force
+    Maba\GentleForce\RateLimitProvider:
+        autowire: true
+    Maba\GentleForce\Throttler:
+        arguments:
+            $client: '@Predis\Client'
+            $rateLimitProvider: '@Maba\GentleForce\RateLimitProvider'
+            $prefix: 'rate_limit::'
+    Maba\GentleForce\ThrottlerInterface: '@Maba\GentleForce\Throttler'
+    
+    # predis/predis
+    Predis\Client:
+        arguments:
+            $parameters:
+                host: '%env(REDIS_HOST)%'
+            $options:
+                prefix: '%app.name%::'

@@ -19,20 +19,22 @@
   "config" : {
     "sort-packages" : true
   },
-  "description" : "API Throttler Symfony bundle",
-  "license" : "proprietary",
+  "description" : "API Throttler Symfony bundle helps you throttle API calls using a persistent token bucket algorithm",
+  "license": "MIT",
+  "minimum-stability": "dev",
   "name" : "jalismrs/symfony-api-throttler.bundle",
   "require-dev" : {
     "composer/package-versions-deprecated" : "*",
     "mikey179/vfsstream" : "*",
-    "phpunit/phpunit" : "^9.2.6",
+    "phpunit/phpunit" : "9.4.2",
     "roave/security-advisories" : "dev-master"
   },
   "require" : {
-    "php" : "^7.4.8",
+    "php" : "^7.4",
     "maba/gentle-force" : "^0.3.0",
-    "symfony/http-kernel" : "^5.1.7",
-    "symfony/dependency-injection": "^4.3.3"
+    "symfony/config" : "^5.0",
+    "symfony/http-kernel" : "^5.0",
+    "symfony/dependency-injection": "^5.0"
   },
   "support" : {
     "email" : "dev@jalis.fr",

@@ -1,6 +1,7 @@
 services:
     _defaults:
-        public: false
+        autowire: true
+        autoconfigure: true
     
     api_throttler.api_throttler:
         class: 'Jalismrs\ApiThrottlerBundle\ApiThrottler'

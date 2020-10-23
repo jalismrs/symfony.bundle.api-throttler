@@ -19,7 +19,7 @@
   "config" : {
     "sort-packages" : true
   },
-  "description" : "API Throttler Symfony bundle helps you throttle API calls using a persistent token bucket algorithm",
+  "description" : "Symfony Bundle - API Throttler",
   "license": "MIT",
   "minimum-stability": "dev",
   "name" : "jalismrs/symfony-api-throttler.bundle",

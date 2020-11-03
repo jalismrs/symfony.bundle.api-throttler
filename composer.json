@@ -8,12 +8,12 @@
   ],
   "autoload" : {
     "psr-4" : {
-      "Jalismrs\\Symfony\\Bundle\\JalismrsApiThrottlerBundle\\" : "src"
+      "Jalismrs\\Symfony\\Bundle\\JalismrsApiThrottlerBundle\\" : "src/"
     }
   },
   "autoload-dev" : {
     "psr-4" : {
-      "Tests\\" : "tests"
+      "Tests\\" : "tests/"
     }
   },
   "config" : {
@@ -30,6 +30,7 @@
   },
   "require" : {
     "php" : "^7.4",
+    "jalismrs/symfony.bundle.core" : "^1.0.0",
     "maba/gentle-force" : "^0.3.0",
     "symfony/config" : "^5.0",
     "symfony/http-kernel" : "^5.0",

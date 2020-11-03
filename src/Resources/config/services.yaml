@@ -26,7 +26,5 @@ services:
     # predis/predis
     Predis\Client:
         arguments:
-            $parameters:
-                host: '%env(REDIS_HOST)%'
-            $options:
-                prefix: '%app.name%::'
+            $parameters: '%jalismrs_api_throttler.redis.parameters%'
+            $options: '%jalismrs_api_throttler.redis.options%'

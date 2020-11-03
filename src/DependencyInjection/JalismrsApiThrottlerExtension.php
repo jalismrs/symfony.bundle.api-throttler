@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection;
 
+use Predis\Client;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -43,8 +44,6 @@ class JalismrsApiThrottlerExtension extends
         
         $definition = $container->getDefinition(Configuration::CONFIG_ROOT . '.api_throttler');
         
-        $arguments = $definition->getArguments();
-        
         $definition->replaceArgument(
             '$cap',
             $mergedConfig['cap']
@@ -52,6 +51,16 @@ class JalismrsApiThrottlerExtension extends
         $definition->replaceArgument(
             '$caps',
             $mergedConfig['caps']
+        );
+        $definition = $container->getDefinition(Client::class);
+    
+        $definition->replaceArgument(
+            '$parameters',
+            $mergedConfig['cap']['parameters']
+        );
+        $definition->replaceArgument(
+            '$options',
+            $mergedConfig['caps']['options']
         );
     }
 }

@@ -11,7 +11,7 @@ services:
             $cap: '%jalismrs_api_throttler.cap%'
             $caps: '%jalismrs_api_throttler.caps%'
     
-    Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler: '@api_throttler.api_throttler'
+    Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler: '@jalismrs_api_throttler.api_throttler'
     
     # maba/gentle-force
     Maba\GentleForce\RateLimitProvider:

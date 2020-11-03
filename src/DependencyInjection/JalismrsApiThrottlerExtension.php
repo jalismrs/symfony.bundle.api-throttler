@@ -53,11 +53,11 @@ class JalismrsApiThrottlerExtension extends
         $definition = $container->getDefinition(Client::class);
         $definition->replaceArgument(
             '$parameters',
-            $mergedConfig['cap']['parameters']
+            $mergedConfig['redis']['parameters']
         );
         $definition->replaceArgument(
             '$options',
-            $mergedConfig['caps']['options']
+            $mergedConfig['redis']['options']
         );
     }
 }

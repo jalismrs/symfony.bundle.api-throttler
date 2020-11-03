@@ -3,10 +3,14 @@ declare(strict_types = 1);
 
 namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle;
 
+use Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection\Configuration;
 use Maba\GentleForce\Exception\RateLimitReachedException;
 use Maba\GentleForce\RateLimitProvider;
 use Maba\GentleForce\ThrottlerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use function array_combine;
+use function array_map;
 use function random_int;
 use function usleep;
 
@@ -22,7 +26,13 @@ class ApiThrottler
      *
      * @var int
      */
-    private int $cap = -1;
+    private int   $cap;
+    /**
+     * caps
+     *
+     * @var array|int[]
+     */
+    private array $caps;
     
     /**
      * rateLimitProvider
@@ -40,28 +50,46 @@ class ApiThrottler
     /**
      * ApiThrottler constructor.
      *
-     * @param \Maba\GentleForce\RateLimitProvider  $rateLimitProvider
-     * @param \Maba\GentleForce\ThrottlerInterface $throttler
+     * @param \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag
+     * @param \Maba\GentleForce\RateLimitProvider                                       $rateLimitProvider
+     * @param \Maba\GentleForce\ThrottlerInterface                                      $throttler
+     *
+     * @throws \Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException
      */
     public function __construct(
+        ParameterBagInterface $parameterBag,
         RateLimitProvider $rateLimitProvider,
         ThrottlerInterface $throttler
     ) {
+        $caps       = $parameterBag->get(Configuration::CONFIG_ROOT . '.caps');
+        $capsKeys   = array_map(
+            static function(
+                array $cap
+            ) : string {
+                $identifier = $cap['identifier'] ?? '';
+                $useCase    = $cap['use_case'] ?? '';
+                
+                return self::buildKey($useCase, $identifier);
+            },
+            $caps
+        );
+        $capsValues = array_map(
+            static function(
+                array $cap
+            ) : int {
+                return (int)$cap['cap'];
+            },
+            $caps
+        );
+        
         $this->rateLimitProvider = $rateLimitProvider;
         $this->throttler         = $throttler;
-    }
-    
-    /**
-     * setCap
-     *
-     * @param int $cap
-     *
-     * @return void
-     */
-    public function setCap(
-        int $cap
-    ) : void {
-        $this->cap = $cap;
+        
+        $this->cap  = $parameterBag->get(Configuration::CONFIG_ROOT . '.cap');
+        $this->caps = array_combine(
+            $capsKeys,
+            $capsValues,
+        );
     }
     
     /**
@@ -82,6 +110,13 @@ class ApiThrottler
         );
     }
     
+    private static function buildKey(
+        string $useCaseKey,
+        string $identifier
+    ): string {
+        return "{$useCaseKey}.{$identifier}";
+    }
+    
     /**
      * waitAndIncrease
      *
@@ -97,13 +132,17 @@ class ApiThrottler
         string $identifier
     ) : void {
         $loop = 0;
-        while ($loop !== $this->cap) {
+        
+        $key = self::buildKey($useCaseKey, $identifier);
+        $cap = $this->caps[$key] ?? $this->cap;
+        
+        while ($loop !== $cap) {
             try {
                 $this->throttler->checkAndIncrease(
                     $useCaseKey,
                     $identifier
                 );
-                $loop = $this->cap;
+                $loop = $cap;
             } catch (RateLimitReachedException $rateLimitReachedException) {
                 /** @noinspection PhpUnhandledExceptionInspection */
                 $epsilon = random_int(
@@ -114,7 +153,7 @@ class ApiThrottler
                 $waitInSeconds = (int)$rateLimitReachedException->getWaitForInSeconds();
                 
                 ++$loop;
-                if ($loop === $this->cap) {
+                if ($loop === $cap) {
                     throw new TooManyRequestsHttpException(
                         $waitInSeconds,
                         'Loop limit was reached',

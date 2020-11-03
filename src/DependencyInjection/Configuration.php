@@ -14,9 +14,11 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 class Configuration implements
     ConfigurationInterface
 {
+    public const CONFIG_ROOT = 'jalismrs_api_throttler';
+    
     public function getConfigTreeBuilder() : TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('jalismrs_api_throttler');
+        $treeBuilder = new TreeBuilder(self::CONFIG_ROOT);
         
         // @formatter:off
         $treeBuilder

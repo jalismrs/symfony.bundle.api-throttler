@@ -40,5 +40,14 @@ class JalismrsApiThrottlerExtension extends
         );
         
         $yamlFileLoader->load('services.yaml');
+    
+        $definition = $container->getDefinition(Configuration::CONFIG_ROOT . '.api_throttler');
+        
+        $arguments = $definition->getArguments();
+        
+        dd($arguments, $mergedConfig);
+        
+        $definition->replaceArgument(0, $mergedConfig[Configuration::CONFIG_ROOT]['cap']);
+        $definition->replaceArgument(1, $mergedConfig[Configuration::CONFIG_ROOT]['caps']);
     }
 }

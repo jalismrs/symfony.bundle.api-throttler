@@ -3,14 +3,10 @@ declare(strict_types = 1);
 
 namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle;
 
-use Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection\Configuration;
 use Maba\GentleForce\Exception\RateLimitReachedException;
 use Maba\GentleForce\RateLimitProvider;
 use Maba\GentleForce\ThrottlerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
-use function array_combine;
-use function array_map;
 use function random_int;
 use function usleep;
 
@@ -50,22 +46,21 @@ class ApiThrottler
     /**
      * ApiThrottler constructor.
      *
-     * @param \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag
-     * @param \Maba\GentleForce\RateLimitProvider                                       $rateLimitProvider
-     * @param \Maba\GentleForce\ThrottlerInterface                                      $throttler
-     *
-     * @throws \Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException
+     * @param \Maba\GentleForce\RateLimitProvider  $rateLimitProvider
+     * @param \Maba\GentleForce\ThrottlerInterface $throttler
+     * @param int                                  $cap
+     * @param array                                $caps
      */
     public function __construct(
-        ParameterBagInterface $parameterBag,
         RateLimitProvider $rateLimitProvider,
-        ThrottlerInterface $throttler
+        ThrottlerInterface $throttler,
+        int $cap,
+        array $caps
     ) {
+        $this->cap               = $cap;
+        $this->caps              = $caps;
         $this->rateLimitProvider = $rateLimitProvider;
         $this->throttler         = $throttler;
-        
-        $this->cap  = $parameterBag->get(Configuration::CONFIG_ROOT . '.cap');
-        $this->caps = $parameterBag->get(Configuration::CONFIG_ROOT . '.caps');
     }
     
     /**

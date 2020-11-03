@@ -34,18 +34,13 @@ class JalismrsApiThrottlerExtension extends
         $fileLocator = new FileLocator(
             __DIR__ . '/../Resources/config'
         );
-        
         $yamlFileLoader = new YamlFileLoader(
             $container,
             $fileLocator
         );
-        
         $yamlFileLoader->load('services.yaml');
         
-        dd($container->getDefinitions());
-        
         $definition = $container->getDefinition(Configuration::CONFIG_ROOT . '.api_throttler');
-        
         $definition->replaceArgument(
             '$cap',
             $mergedConfig['cap']
@@ -54,8 +49,8 @@ class JalismrsApiThrottlerExtension extends
             '$caps',
             $mergedConfig['caps']
         );
+        
         $definition = $container->getDefinition(Client::class);
-    
         $definition->replaceArgument(
             '$parameters',
             $mergedConfig['cap']['parameters']

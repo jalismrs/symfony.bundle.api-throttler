@@ -6,11 +6,11 @@ namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class ApiThrottlerBundle
+ * Class JalismrsApiThrottlerBundle
  *
  * @package Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle
  */
-class ApiThrottlerBundle extends
+class JalismrsApiThrottlerBundle extends
     Bundle
 {
 

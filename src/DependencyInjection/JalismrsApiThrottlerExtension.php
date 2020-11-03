@@ -9,11 +9,11 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
 /**
- * Class ApiThrottlerExtension
+ * Class JalismrsApiThrottlerExtension
  *
  * @package Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection
  */
-class ApiThrottlerExtension extends
+class JalismrsApiThrottlerExtension extends
     ConfigurableExtension
 {
     /**

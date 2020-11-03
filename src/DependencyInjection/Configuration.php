@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\IntegerNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\ScalarNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -25,6 +28,7 @@ class Configuration implements
             ->getRootNode()
             ->children()
                 ->arrayNode('redis')
+                    ->info('Redis client configuration')
                     ->isRequired()
                     ->children()
                         ->arrayNode('parameters')
@@ -56,11 +60,9 @@ class Configuration implements
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('key')
                     ->integerPrototype()
-                        ->defaultValue(0)
-                    ->end()
+                    ->defaultValue(0)
                 ->end()
             ->end();
-        
         // @formatter:on
         
         return $treeBuilder;

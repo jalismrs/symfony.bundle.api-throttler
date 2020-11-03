@@ -20,20 +20,23 @@ class Configuration implements
     {
         $treeBuilder = new TreeBuilder(self::CONFIG_ROOT);
         
+        $defaultValue = -1;
+        
         // @formatter:off
         $treeBuilder
             ->getRootNode()
             ->children()
                 ->integerNode('cap')
                     ->info('Limit API call failures tu this value. -1 => no limit')
-                    ->defaultValue(-1)
+                    ->defaultValue($defaultValue)
                 ->end()
                 ->arrayNode('caps')
                     ->info('Limit specific API call failures to this value. -1 => no limit')
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('name')
                     ->integerPrototype()
-                        ->defaultValue(-1)
+                        ->treatNullLike($defaultValue)
+                        ->defaultValue($defaultValue)
                     ->end()
                 ->end()
             ->end();

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests;
 
-use Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler;
+use Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler;
 use Maba\GentleForce\Exception\RateLimitReachedException;
 use Maba\GentleForce\RateLimitProvider;
 use Maba\GentleForce\ThrottlerInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
  *
  * @package Tests
  *
- * @covers  \Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler
+ * @covers  \Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler
  */
 final class ApiThrottlerTest extends
     TestCase
@@ -67,13 +67,19 @@ final class ApiThrottlerTest extends
     /**
      * createSUT
      *
-     * @return \Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler
+     * @param int|null $cap
+     *
+     * @return \Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler
      */
-    private function createSUT() : ApiThrottler
+    private function createSUT(
+        int $cap = null
+    ) : ApiThrottler
     {
         return new ApiThrottler(
             $this->mockRateLimitProvider,
             $this->mockThrottler,
+            $cap ?? -1,
+            []
         );
     }
     
@@ -126,10 +132,8 @@ final class ApiThrottlerTest extends
     public function testWaitAndIncreaseThrowsRateLimitReachedException() : void
     {
         // arrange
-        $systemUnderTest = $this->createSUT();
+        $systemUnderTest = $this->createSUT(1);
     
-        $systemUnderTest->setCap(1);
-        
         // expect
         $this->expectException(TooManyRequestsHttpException::class);
         $this->expectExceptionMessage('Loop limit was reached');
@@ -142,7 +146,7 @@ final class ApiThrottlerTest extends
             )
             ->willThrowException(
                 new RateLimitReachedException(
-                    42,
+                    1,
                     'Rate limit was reached'
                 )
             );

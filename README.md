@@ -1,4 +1,4 @@
-# symfony.bundle.api-hrottler
+# symfony.bundle.api-throttler
 
 Adds a service to throttle API calls
 
@@ -15,7 +15,7 @@ coverage reports will be available in `var/coverage`
 ## Use
 
 ```php
-use Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler;
+use Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler;
 
 class SomeApiClass {
     private ApiThrottler $apiThrottler;
@@ -30,18 +30,42 @@ class SomeApiClass {
          * https://packagist.org/packages/maba/gentle-force
          */
          $this->apiThrottler->registerRateLimits(
-            'useCase',
-            [],
+            'useCaseKey', // string $useCaseKey
+            [],           // array  $rateLimits
          );
     }
     
-    public function someApiCall() {
+    public function someApiCall(): void {
         $this->apiThrottler->waitAndIncrease(
-            'useCase',
-            'identifier',
+            'useCaseKey', // string   $useCaseKey
+            'identifier', // string   $identifier
+            4,            // int|null $cap
         );
         
         // api call HERE
     }
 }
+```
+
+## Configuration
+
+Try limits can be configured:
+* for all calls
+* for all 'useCaseKey' calls
+* for all 'useCaseKey.identifier' calls
+* for a specific call with $cap parameter
+
+```yaml
+# config/packages/jalismrs_api_throttler.yaml
+
+jalismrs_api_throttler:
+    cap: 1
+    caps:
+        useCaseKey: 2
+        useCaseKey.identifier: 0
+```
+
+## Environment
+```dotenv
+REDIS_HOST='REDIS_HOST'
 ```

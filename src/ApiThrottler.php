@@ -1,8 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Jalismrs\ApiThrottlerBundle;
+namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle;
 
+use Exception;
 use Maba\GentleForce\Exception\RateLimitReachedException;
 use Maba\GentleForce\RateLimitProvider;
 use Maba\GentleForce\ThrottlerInterface;
@@ -13,7 +14,7 @@ use function usleep;
 /**
  * Class ApiThrottler
  *
- * @package Jalismrs\ApiThrottlerBundle
+ * @package Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle
  */
 class ApiThrottler
 {
@@ -22,7 +23,13 @@ class ApiThrottler
      *
      * @var int
      */
-    private int $cap = -1;
+    private int   $cap;
+    /**
+     * caps
+     *
+     * @var array|int[]
+     */
+    private array $caps;
     
     /**
      * rateLimitProvider
@@ -42,26 +49,19 @@ class ApiThrottler
      *
      * @param \Maba\GentleForce\RateLimitProvider  $rateLimitProvider
      * @param \Maba\GentleForce\ThrottlerInterface $throttler
+     * @param int                                  $cap
+     * @param array                                $caps
      */
     public function __construct(
         RateLimitProvider $rateLimitProvider,
-        ThrottlerInterface $throttler
+        ThrottlerInterface $throttler,
+        int $cap,
+        array $caps
     ) {
+        $this->cap               = $cap;
+        $this->caps              = $caps;
         $this->rateLimitProvider = $rateLimitProvider;
         $this->throttler         = $throttler;
-    }
-    
-    /**
-     * setCap
-     *
-     * @param int $cap
-     *
-     * @return void
-     */
-    public function setCap(
-        int $cap
-    ) : void {
-        $this->cap = $cap;
     }
     
     /**
@@ -85,8 +85,9 @@ class ApiThrottler
     /**
      * waitAndIncrease
      *
-     * @param string $useCaseKey
-     * @param string $identifier
+     * @param string   $useCaseKey
+     * @param string   $identifier
+     * @param int|null $cap
      *
      * @return void
      *
@@ -94,36 +95,48 @@ class ApiThrottler
      */
     public function waitAndIncrease(
         string $useCaseKey,
-        string $identifier
+        string $identifier,
+        int $cap = null
     ) : void {
         $loop = 0;
-        while ($loop !== $this->cap) {
+        
+        $cap = $cap
+            ?? $this->caps["{$useCaseKey}.{$identifier}"]
+            ?? $this->caps[$useCaseKey]
+            ?? $this->cap;
+        
+        do {
+            ++$loop;
+            
             try {
                 $this->throttler->checkAndIncrease(
                     $useCaseKey,
                     $identifier
                 );
-                $loop = $this->cap;
+                $loop = $cap;
             } catch (RateLimitReachedException $rateLimitReachedException) {
-                /** @noinspection PhpUnhandledExceptionInspection */
-                $epsilon = random_int(
-                    100,
-                    1000
-                );
-                
+                try {
+                    $epsilon = random_int(
+                        100,
+                        1000
+                    );
+                } catch (Exception $exception) {
+                    $epsilon = 666;
+                }
+    
                 $waitInSeconds = (int)$rateLimitReachedException->getWaitForInSeconds();
                 
-                ++$loop;
-                if ($loop === $this->cap) {
+                if ($loop === $cap) {
                     throw new TooManyRequestsHttpException(
                         $waitInSeconds,
                         'Loop limit was reached',
                         $rateLimitReachedException
                     );
                 }
+                
                 usleep(1000000 * $waitInSeconds + $epsilon);
             }
-        }
+        } while ($loop !== $cap);
     }
     
     /**

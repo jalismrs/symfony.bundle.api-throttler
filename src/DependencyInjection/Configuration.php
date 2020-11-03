@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Jalismrs\Symfony\Bundle\ApiThrottlerBundle\DependencyInjection;
+namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -9,33 +9,31 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 /**
  * Class Configuration
  *
- * @package Jalismrs\Symfony\Bundle\ApiThrottlerBundle\DependencyInjection
+ * @package Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection
  */
 class Configuration implements
     ConfigurationInterface
 {
+    public const CONFIG_ROOT = 'jalismrs_api_throttler';
+    
     public function getConfigTreeBuilder() : TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('jalismrs.bundle.api_throttler');
+        $treeBuilder = new TreeBuilder(self::CONFIG_ROOT);
         
         // @formatter:off
         $treeBuilder
             ->getRootNode()
             ->children()
                 ->integerNode('cap')
-                    ->defaultValue(-1)
+                    ->info('Limit API call failures tu this value. -1 => no limit')
+                    ->defaultValue(0)
                 ->end()
                 ->arrayNode('caps')
-                    ->arrayPrototype()
-                        ->children()
-                            ->scalarNode('use_case')
-                            ->end()
-                            ->scalarNode('identifier')
-                            ->end()
-                            ->integerNode('cap')
-                                ->defaultValue(-1)
-                            ->end()
-                        ->end()
+                    ->info('Limit specific API call failures to this value. -1 => no limit')
+                    ->normalizeKeys(false)
+                    ->useAttributeAsKey('key')
+                    ->integerPrototype()
+                        ->defaultValue(0)
                     ->end()
                 ->end()
             ->end();

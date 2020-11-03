@@ -8,7 +8,7 @@
   ],
   "autoload" : {
     "psr-4" : {
-      "Jalismrs\\Symfony\\Bundle\\ApiThrottlerBundle\\" : "src"
+      "Jalismrs\\Symfony\\Bundle\\JalismrsApiThrottlerBundle\\" : "src"
     }
   },
   "autoload-dev" : {

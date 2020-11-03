@@ -16,7 +16,7 @@ class Configuration implements
 {
     public function getConfigTreeBuilder() : TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('jalismrs.bundle.api_throttler');
+        $treeBuilder = new TreeBuilder('jalismrs_bundle_api-throttler');
         
         // @formatter:off
         $treeBuilder

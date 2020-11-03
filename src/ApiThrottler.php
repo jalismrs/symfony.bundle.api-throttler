@@ -84,8 +84,9 @@ class ApiThrottler
     /**
      * waitAndIncrease
      *
-     * @param string $useCaseKey
-     * @param string $identifier
+     * @param string   $useCaseKey
+     * @param string   $identifier
+     * @param int|null $cap
      *
      * @return void
      *
@@ -93,11 +94,13 @@ class ApiThrottler
      */
     public function waitAndIncrease(
         string $useCaseKey,
-        string $identifier
+        string $identifier,
+        int $cap = null
     ) : void {
         $loop = 0;
         
-        $cap = $this->caps["{$useCaseKey}.{$identifier}"]
+        $cap = $cap
+            ?? $this->caps["{$useCaseKey}.{$identifier}"]
             ?? $this->caps[$useCaseKey]
             ?? $this->cap;
         

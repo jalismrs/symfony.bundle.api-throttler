@@ -29,7 +29,6 @@ class Configuration implements
                     ->defaultValue(-1)
                 ->end()
                 ->arrayNode('caps')
-                    ->addDefaultsIfNotSet()
                     ->info('Limit specific API call failures to this value. -1 => no limit')
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('name')

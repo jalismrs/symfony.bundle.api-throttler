@@ -8,7 +8,7 @@
   ],
   "autoload" : {
     "psr-4" : {
-      "Jalismrs\\ApiThrottlerBundle\\" : "src"
+      "Jalismrs\\Symfony\\Bundle\\ApiThrottlerBundle\\" : "src"
     }
   },
   "autoload-dev" : {
@@ -19,10 +19,9 @@
   "config" : {
     "sort-packages" : true
   },
-  "description" : "Symfony Bundle - API Throttler",
+  "description" : "Adds a service to throttle API calls",
   "license": "MIT",
-  "minimum-stability": "dev",
-  "name" : "jalismrs/symfony-api-throttler.bundle",
+  "name" : "jalismrs/symfony.bundle.api-throttler",
   "require-dev" : {
     "composer/package-versions-deprecated" : "*",
     "mikey179/vfsstream" : "*",
@@ -38,10 +37,10 @@
   },
   "support" : {
     "email" : "dev@jalis.fr",
-    "issues" : "https://github.com/jalismrs/symfony-api-throttler.bundle/issues",
-    "wiki" : "https://github.com/jalismrs/symfony-api-throttler.bundle/wiki",
-    "source" : "https://github.com/jalismrs/symfony-api-throttler.bundle",
-    "docs" : "https://github.com/jalismrs/symfony-api-throttler.bundle"
+    "issues" : "https://github.com/jalismrs/symfony.bundle.api-throttler/issues",
+    "wiki" : "https://github.com/jalismrs/symfony.bundle.api-throttler/wiki",
+    "source" : "https://github.com/jalismrs/symfony.bundle.api-throttler",
+    "docs" : "https://github.com/jalismrs/symfony.bundle.api-throttler"
   },
   "type" : "symfony-bundle"
 }

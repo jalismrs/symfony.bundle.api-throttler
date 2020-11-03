@@ -8,6 +8,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use function preg_match;
 
 /**
  * Class JalismrsApiThrottlerExtension
@@ -49,6 +50,13 @@ class JalismrsApiThrottlerExtension extends
             '$caps',
             $mergedConfig['caps']
         );
+        
+        $redisOptionPrefix = $mergedConfig['redis']['options']['prefix'];
+        if (preg_match('#::$#', $redisOptionPrefix) !== 1) {
+            $redisOptionPrefix .= '::';
+            
+            $mergedConfig['redis']['options']['prefix'] = $redisOptionPrefix;
+        }
         
         $definition = $container->getDefinition(Client::class);
         $definition->replaceArgument(

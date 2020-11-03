@@ -37,6 +37,7 @@ class Configuration implements
                             ->end()
                         ->end()
                         ->arrayNode('options')
+                            ->isRequired()
                             ->children()
                                 ->scalarNode('prefix')
                                     ->isRequired()

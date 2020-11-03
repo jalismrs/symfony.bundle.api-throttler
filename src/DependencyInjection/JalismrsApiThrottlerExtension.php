@@ -42,6 +42,8 @@ class JalismrsApiThrottlerExtension extends
         
         $yamlFileLoader->load('services.yaml');
         
+        dd($container->getDefinitions());
+        
         $definition = $container->getDefinition(Configuration::CONFIG_ROOT . '.api_throttler');
         
         $definition->replaceArgument(

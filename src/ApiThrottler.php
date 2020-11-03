@@ -61,35 +61,11 @@ class ApiThrottler
         RateLimitProvider $rateLimitProvider,
         ThrottlerInterface $throttler
     ) {
-        $caps       = $parameterBag->get(Configuration::CONFIG_ROOT . '.caps');
-        $capsKeys   = array_map(
-            static function(
-                array $cap
-            ) : string {
-                $identifier = $cap['identifier'] ?? '';
-                $useCase    = $cap['use_case'] ?? '';
-                
-                return self::buildKey($useCase, $identifier);
-            },
-            $caps
-        );
-        $capsValues = array_map(
-            static function(
-                array $cap
-            ) : int {
-                return (int)$cap['cap'];
-            },
-            $caps
-        );
-        
         $this->rateLimitProvider = $rateLimitProvider;
         $this->throttler         = $throttler;
         
         $this->cap  = $parameterBag->get(Configuration::CONFIG_ROOT . '.cap');
-        $this->caps = array_combine(
-            $capsKeys,
-            $capsValues,
-        );
+        $this->caps = $parameterBag->get(Configuration::CONFIG_ROOT . '.caps');
     }
     
     /**
@@ -110,13 +86,6 @@ class ApiThrottler
         );
     }
     
-    private static function buildKey(
-        string $useCaseKey,
-        string $identifier
-    ): string {
-        return "{$useCaseKey}.{$identifier}";
-    }
-    
     /**
      * waitAndIncrease
      *
@@ -133,8 +102,9 @@ class ApiThrottler
     ) : void {
         $loop = 0;
         
-        $key = self::buildKey($useCaseKey, $identifier);
-        $cap = $this->caps[$key] ?? $this->cap;
+        $cap = $this->caps["{$useCaseKey}.{$identifier}"]
+            ?? $this->caps[$useCaseKey]
+            ?? $this->cap;
         
         while ($loop !== $cap) {
             try {

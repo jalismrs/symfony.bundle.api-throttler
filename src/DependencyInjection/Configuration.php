@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\IntegerNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\ScalarNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -24,6 +27,30 @@ class Configuration implements
         $treeBuilder
             ->getRootNode()
             ->children()
+                ->arrayNode('redis')
+                    ->info('Redis client configuration')
+                    ->isRequired()
+                    ->children()
+                        ->arrayNode('parameters')
+                            ->isRequired()
+                            ->children()
+                                ->scalarNode('host')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+                        ->end()
+                        ->arrayNode('options')
+                            ->isRequired()
+                            ->children()
+                                ->scalarNode('prefix')
+                                    ->isRequired()
+                                    ->cannotBeEmpty()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->integerNode('cap')
                     ->info('Limit API call failures tu this value. -1 => no limit')
                     ->defaultValue(0)
@@ -33,11 +60,9 @@ class Configuration implements
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('key')
                     ->integerPrototype()
-                        ->defaultValue(0)
-                    ->end()
+                    ->defaultValue(0)
                 ->end()
             ->end();
-        
         // @formatter:on
         
         return $treeBuilder;

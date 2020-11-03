@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Jalismrs\Symfony\Bundle\ApiThrottlerBundle;
+namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle;
 
 use Maba\GentleForce\Exception\RateLimitReachedException;
 use Maba\GentleForce\RateLimitProvider;
@@ -13,7 +13,7 @@ use function usleep;
 /**
  * Class ApiThrottler
  *
- * @package Jalismrs\Symfony\Bundle\ApiThrottlerBundle
+ * @package Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle
  */
 class ApiThrottler
 {

@@ -4,12 +4,12 @@ services:
         autoconfigure: true
     
     api_throttler.api_throttler:
-        class: 'Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler'
+        class: 'Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler'
         arguments:
             $rateLimitProvider: '@Maba\GentleForce\RateLimitProvider'
             $throttler: '@Maba\GentleForce\ThrottlerInterface'
     
-    Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler: '@api_throttler.api_throttler'
+    Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler: '@api_throttler.api_throttler'
     
     # maba/gentle-force
     Maba\GentleForce\RateLimitProvider:

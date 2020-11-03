@@ -15,7 +15,7 @@ coverage reports will be available in `var/coverage`
 ## Use
 
 ```php
-use Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler;
+use Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler;
 
 class SomeApiClass {
     private ApiThrottler $apiThrottler;

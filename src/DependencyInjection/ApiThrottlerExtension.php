@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Jalismrs\Symfony\Bundle\ApiThrottlerBundle\DependencyInjection;
+namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 /**
  * Class ApiThrottlerExtension
  *
- * @package Jalismrs\Symfony\Bundle\ApiThrottlerBundle\DependencyInjection
+ * @package Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection
  */
 class ApiThrottlerExtension extends
     ConfigurableExtension

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests;
 
-use Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler;
+use Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler;
 use Maba\GentleForce\Exception\RateLimitReachedException;
 use Maba\GentleForce\RateLimitProvider;
 use Maba\GentleForce\ThrottlerInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
  *
  * @package Tests
  *
- * @covers  \Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler
+ * @covers  \Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler
  */
 final class ApiThrottlerTest extends
     TestCase
@@ -67,7 +67,7 @@ final class ApiThrottlerTest extends
     /**
      * createSUT
      *
-     * @return \Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler
+     * @return \Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler
      */
     private function createSUT() : ApiThrottler
     {

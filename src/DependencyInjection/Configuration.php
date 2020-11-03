@@ -3,9 +3,6 @@ declare(strict_types = 1);
 
 namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
-use Symfony\Component\Config\Definition\Builder\IntegerNodeDefinition;
-use Symfony\Component\Config\Definition\Builder\ScalarNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -32,35 +29,38 @@ class Configuration implements
                     ->isRequired()
                     ->children()
                         ->arrayNode('parameters')
-                            ->isRequired()
                             ->children()
                                 ->scalarNode('host')
-                                    ->isRequired()
                                     ->cannotBeEmpty()
+                                    ->isRequired()
                                 ->end()
                             ->end()
+                            ->ignoreExtraKeys()
+                            ->isRequired()
                         ->end()
                         ->arrayNode('options')
-                            ->isRequired()
                             ->children()
                                 ->scalarNode('prefix')
-                                    ->isRequired()
                                     ->cannotBeEmpty()
+                                    ->isRequired()
                                 ->end()
                             ->end()
+                            ->ignoreExtraKeys()
+                            ->isRequired()
                         ->end()
                     ->end()
                 ->end()
                 ->integerNode('cap')
-                    ->info('Limit API call failures tu this value. -1 => no limit')
                     ->defaultValue(0)
+                    ->info('Limit API call failures tu this value. -1 => no limit')
                 ->end()
                 ->arrayNode('caps')
                     ->info('Limit specific API call failures to this value. -1 => no limit')
+                    ->integerPrototype()
+                        ->defaultValue(0)
+                    ->end()
                     ->normalizeKeys(false)
                     ->useAttributeAsKey('key')
-                    ->integerPrototype()
-                    ->defaultValue(0)
                 ->end()
             ->end();
         // @formatter:on

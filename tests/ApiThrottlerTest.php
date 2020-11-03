@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests;
 
-use Jalismrs\ApiThrottlerBundle\ApiThrottler;
+use Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler;
 use Maba\GentleForce\Exception\RateLimitReachedException;
 use Maba\GentleForce\RateLimitProvider;
 use Maba\GentleForce\ThrottlerInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
  *
  * @package Tests
  *
- * @covers  \Jalismrs\ApiThrottlerBundle\ApiThrottler
+ * @covers  \Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler
  */
 final class ApiThrottlerTest extends
     TestCase
@@ -67,7 +67,7 @@ final class ApiThrottlerTest extends
     /**
      * createSUT
      *
-     * @return \Jalismrs\ApiThrottlerBundle\ApiThrottler
+     * @return \Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler
      */
     private function createSUT() : ApiThrottler
     {
@@ -127,6 +127,8 @@ final class ApiThrottlerTest extends
     {
         // arrange
         $systemUnderTest = $this->createSUT();
+    
+        $systemUnderTest->setCap(1);
         
         // expect
         $this->expectException(TooManyRequestsHttpException::class);
@@ -146,7 +148,6 @@ final class ApiThrottlerTest extends
             );
         
         // act
-        $systemUnderTest->setCap(1);
         $systemUnderTest->waitAndIncrease(
             ApiThrottlerProvider::USE_CASE_KEY,
             ApiThrottlerProvider::IDENTIFIER

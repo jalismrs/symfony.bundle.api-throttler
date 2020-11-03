@@ -1,6 +1,6 @@
-# Symfony Bundle API Throttler
+# symfony.bundle.api-hrottler
 
-this bundle helps you throttle API calls using a persistent token bucket algorithm
+Adds a service to throttle API calls
 
 ## Test
 
@@ -15,7 +15,7 @@ coverage reports will be available in `var/coverage`
 ## Use
 
 ```php
-use Jalismrs\ApiThrottlerBundle\ApiThrottler;
+use Jalismrs\Symfony\Bundle\ApiThrottlerBundle\ApiThrottler;
 
 class SomeApiClass {
     private ApiThrottler $apiThrottler;

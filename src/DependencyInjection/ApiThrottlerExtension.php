@@ -1,17 +1,17 @@
 <?php
 declare(strict_types = 1);
 
-namespace Jalismrs\ApiThrottlerBundle\DependencyInjection;
+namespace Jalismrs\Symfony\Bundle\ApiThrottlerBundle\DependencyInjection;
 
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Symfony\Component\Config\FileLocator;
 
 /**
  * Class ApiThrottlerExtension
  *
- * @package Jalismrs\ApiThrottlerBundle\DependencyInjection
+ * @package Jalismrs\Symfony\Bundle\ApiThrottlerBundle\DependencyInjection
  */
 class ApiThrottlerExtension extends
     Extension
@@ -29,16 +29,24 @@ class ApiThrottlerExtension extends
     public function load(
         array $configs,
         ContainerBuilder $container
-    ): void {
+    ) : void {
         $fileLocator = new FileLocator(
-            __DIR__.'/../Resources/config'
+            __DIR__ . '/../Resources/config'
         );
         
         $yamlFileLoader = new YamlFileLoader(
             $container,
             $fileLocator
         );
-    
+        
         $yamlFileLoader->load('services.yaml');
+        
+        
+        $configuration = new Configuration();
+        
+        $config = $this->processConfiguration(
+            $configuration,
+            $configs
+        );
     }
 }

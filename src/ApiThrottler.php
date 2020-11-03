@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle;
 
+use Exception;
 use Maba\GentleForce\Exception\RateLimitReachedException;
 use Maba\GentleForce\RateLimitProvider;
 use Maba\GentleForce\ThrottlerInterface;
@@ -104,7 +105,9 @@ class ApiThrottler
             ?? $this->caps[$useCaseKey]
             ?? $this->cap;
         
-        while ($loop !== $cap) {
+        do {
+            ++$loop;
+            
             try {
                 $this->throttler->checkAndIncrease(
                     $useCaseKey,
@@ -112,15 +115,17 @@ class ApiThrottler
                 );
                 $loop = $cap;
             } catch (RateLimitReachedException $rateLimitReachedException) {
-                /** @noinspection PhpUnhandledExceptionInspection */
-                $epsilon = random_int(
-                    100,
-                    1000
-                );
-                
+                try {
+                    $epsilon = random_int(
+                        100,
+                        1000
+                    );
+                } catch (Exception $exception) {
+                    $epsilon = 666;
+                }
+    
                 $waitInSeconds = (int)$rateLimitReachedException->getWaitForInSeconds();
                 
-                ++$loop;
                 if ($loop === $cap) {
                     throw new TooManyRequestsHttpException(
                         $waitInSeconds,
@@ -131,7 +136,7 @@ class ApiThrottler
                 
                 usleep(1000000 * $waitInSeconds + $epsilon);
             }
-        }
+        } while ($loop !== $cap);
     }
     
     /**

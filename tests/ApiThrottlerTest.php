@@ -67,13 +67,19 @@ final class ApiThrottlerTest extends
     /**
      * createSUT
      *
+     * @param int|null $cap
+     *
      * @return \Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler
      */
-    private function createSUT() : ApiThrottler
+    private function createSUT(
+        int $cap = null
+    ) : ApiThrottler
     {
         return new ApiThrottler(
             $this->mockRateLimitProvider,
             $this->mockThrottler,
+            $cap ?? -1,
+            []
         );
     }
     
@@ -126,10 +132,8 @@ final class ApiThrottlerTest extends
     public function testWaitAndIncreaseThrowsRateLimitReachedException() : void
     {
         // arrange
-        $systemUnderTest = $this->createSUT();
+        $systemUnderTest = $this->createSUT(1);
     
-        $systemUnderTest->setCap(1);
-        
         // expect
         $this->expectException(TooManyRequestsHttpException::class);
         $this->expectExceptionMessage('Loop limit was reached');
@@ -142,7 +146,7 @@ final class ApiThrottlerTest extends
             )
             ->willThrowException(
                 new RateLimitReachedException(
-                    42,
+                    1,
                     'Rate limit was reached'
                 )
             );

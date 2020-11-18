@@ -3,12 +3,11 @@ declare(strict_types = 1);
 
 namespace Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\DependencyInjection;
 
-use Predis\Client;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
-use function preg_match;
+use function preg_replace;
 
 /**
  * Class JalismrsApiThrottlerExtension
@@ -21,7 +20,7 @@ class JalismrsApiThrottlerExtension extends
     /**
      * loadInternal
      *
-     * @param array $mergedConfig
+     * @param array                                                   $mergedConfig
      * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
      *
      * @return void
@@ -32,7 +31,7 @@ class JalismrsApiThrottlerExtension extends
         array $mergedConfig,
         ContainerBuilder $container
     ) : void {
-        $fileLocator = new FileLocator(
+        $fileLocator    = new FileLocator(
             __DIR__ . '/../Resources/config'
         );
         $yamlFileLoader = new YamlFileLoader(
@@ -51,14 +50,16 @@ class JalismrsApiThrottlerExtension extends
             $mergedConfig['caps']
         );
         
-        $redisOptionPrefix = $mergedConfig['redis']['options']['prefix'];
-        if (preg_match('#::$#', $redisOptionPrefix) !== 1) {
-            $redisOptionPrefix .= '::';
-            
-            $mergedConfig['redis']['options']['prefix'] = $redisOptionPrefix;
-        }
+        $redisOptionPrefix                          = $mergedConfig['redis']['options']['prefix'];
+        $redisOptionPrefix                          = preg_replace(
+            '#[^a-zA-Z\d]+$#',
+            '',
+            $redisOptionPrefix,
+        );
+        $redisOptionPrefix                          .= '::';
+        $mergedConfig['redis']['options']['prefix'] = $redisOptionPrefix;
         
-        $definition = $container->getDefinition(Client::class);
+        $definition = $container->getDefinition(Configuration::CONFIG_ROOT . '.dependency.predis.predis.client');
         $definition->replaceArgument(
             '$parameters',
             $mergedConfig['redis']['parameters']

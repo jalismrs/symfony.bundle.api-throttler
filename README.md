@@ -63,9 +63,9 @@ jalismrs_api_throttler:
     caps:
         useCaseKey: 2
         useCaseKey.identifier: 0
-```
-
-## Environment
-```dotenv
-REDIS_HOST='REDIS_HOST'
+    redis:
+        parameters:
+            host: 'redis_host'
+        options:
+            prefix: 'redis_prefix'
 ```

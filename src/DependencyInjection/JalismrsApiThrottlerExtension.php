@@ -7,7 +7,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
-use function preg_match;
 use function preg_replace;
 
 /**
@@ -51,15 +50,15 @@ class JalismrsApiThrottlerExtension extends
             $mergedConfig['caps']
         );
         
-        $redisOptionPrefix = $mergedConfig['redis']['options']['prefix'];
-        $redisOptionPrefix = preg_replace(
+        $redisOptionPrefix                          = $mergedConfig['redis']['options']['prefix'];
+        $redisOptionPrefix                          = preg_replace(
             '#[^a-zA-Z\d]+$#',
             '',
             $redisOptionPrefix,
         );
-        $redisOptionPrefix .= '::';
+        $redisOptionPrefix                          .= '::';
         $mergedConfig['redis']['options']['prefix'] = $redisOptionPrefix;
-
+        
         $definition = $container->getDefinition(Configuration::CONFIG_ROOT . '.dependency.predis.predis.client');
         $definition->replaceArgument(
             '$parameters',

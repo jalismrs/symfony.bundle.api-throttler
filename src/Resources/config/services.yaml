@@ -3,28 +3,34 @@ services:
         autowire: true
         autoconfigure: true
     
+    # aliases
+    Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler: '@jalismrs_api_throttler.api_throttler'
+    
+    # services
     jalismrs_api_throttler.api_throttler:
-        class: 'Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler'
         arguments:
-            $rateLimitProvider: '@Maba\GentleForce\RateLimitProvider'
+            $rateLimitProvider: '@jalismrs_api_throttler.dependency.maba.gentle_force.rate_limit_provider'
             $throttler: '@Maba\GentleForce\ThrottlerInterface'
             $cap: '%jalismrs_api_throttler.cap%'
             $caps: '%jalismrs_api_throttler.caps%'
+        class: 'Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler'
     
-    Jalismrs\Symfony\Bundle\JalismrsApiThrottlerBundle\ApiThrottler: '@jalismrs_api_throttler.api_throttler'
-    
+    # DEPENDENCIES -------------------------------------------------------------
     # maba/gentle-force
-    Maba\GentleForce\RateLimitProvider:
-        autowire: true
-    Maba\GentleForce\Throttler:
+    jalismrs_api_throttler.dependency.maba.gentle_force.rate_limit_provider:
+        class: 'Maba\GentleForce\RateLimitProvider'
+    jalismrs_api_throttler.dependency.maba.gentle_force.throttler:
         arguments:
-            $client: '@Predis\Client'
-            $rateLimitProvider: '@Maba\GentleForce\RateLimitProvider'
+            $client: '@jalismrs_api_throttler.dependency.predis.predis.client'
+            $rateLimitProvider: '@jalismrs_api_throttler.dependency.maba.gentle_force.rate_limit_provider'
             $prefix: 'rate_limit::'
-    Maba\GentleForce\ThrottlerInterface: '@Maba\GentleForce\Throttler'
+        class: 'Maba\GentleForce\Throttler'
+    
+    Maba\GentleForce\ThrottlerInterface: '@jalismrs_api_throttler.dependency.maba.gentle_force.throttler'
     
     # predis/predis
-    Predis\Client:
+    jalismrs_api_throttler.dependency.predis.predis.client:
         arguments:
             $parameters: '%jalismrs_api_throttler.redis.parameters%'
             $options: '%jalismrs_api_throttler.redis.options%'
+        class: 'Predis\Client'

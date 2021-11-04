@@ -134,7 +134,7 @@ class ApiThrottler
                     );
                 }
 
-                usleep(1000000 * $waitInSeconds + $epsilon);
+                usleep((int)(1000000 * $waitInSeconds) + $epsilon + 1);
             }
         } while ($loop !== $cap);
     }

@@ -30,7 +30,7 @@ class ApiThrottler
      * @var array|int[]
      */
     private array $caps;
-    
+
     /**
      * rateLimitProvider
      *
@@ -43,7 +43,7 @@ class ApiThrottler
      * @var \Maba\GentleForce\Throttler|\Maba\GentleForce\ThrottlerInterface
      */
     private ThrottlerInterface $throttler;
-    
+
     /**
      * ApiThrottler constructor.
      *
@@ -63,7 +63,7 @@ class ApiThrottler
         $this->rateLimitProvider = $rateLimitProvider;
         $this->throttler         = $throttler;
     }
-    
+
     /**
      * registerRateLimits
      *
@@ -81,7 +81,7 @@ class ApiThrottler
             $rateLimits
         );
     }
-    
+
     /**
      * waitAndIncrease
      *
@@ -99,15 +99,15 @@ class ApiThrottler
         int $cap = null
     ) : void {
         $loop = 0;
-        
+
         $cap = $cap
             ?? $this->caps["{$useCaseKey}.{$identifier}"]
             ?? $this->caps[$useCaseKey]
             ?? $this->cap;
-        
+
         do {
             ++$loop;
-            
+
             try {
                 $this->throttler->checkAndIncrease(
                     $useCaseKey,
@@ -123,9 +123,9 @@ class ApiThrottler
                 } catch (Exception $exception) {
                     $epsilon = 666;
                 }
-    
-                $waitInSeconds = (int)$rateLimitReachedException->getWaitForInSeconds();
-                
+
+                $waitInSeconds = $rateLimitReachedException->getWaitForInSeconds();
+
                 if ($loop === $cap) {
                     throw new TooManyRequestsHttpException(
                         $waitInSeconds,
@@ -133,12 +133,12 @@ class ApiThrottler
                         $rateLimitReachedException
                     );
                 }
-                
+
                 usleep(1000000 * $waitInSeconds + $epsilon);
             }
         } while ($loop !== $cap);
     }
-    
+
     /**
      * decrease
      *
@@ -156,7 +156,7 @@ class ApiThrottler
             $identifier
         );
     }
-    
+
     /**
      * reset
      *
